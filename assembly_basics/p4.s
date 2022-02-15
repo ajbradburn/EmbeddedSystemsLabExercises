@@ -45,6 +45,13 @@ main:
     /* r0 + 1 */
   add r0, r0, r1
 
+    /* Find the average */
+  mov r1, #12
+  udiv r0, r0, r1
+
+    /* Clear register 0 */
+  eor r0, r0, r0
+
   bx lr
 
 numbers_address: .word numbers
