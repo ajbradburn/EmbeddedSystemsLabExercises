@@ -1,0 +1,4 @@
+#!/bin/bash
+as -o out/$1.o $1.s
+gcc -o out/$1 out/$1.o
+./out/$1 ; echo $?
