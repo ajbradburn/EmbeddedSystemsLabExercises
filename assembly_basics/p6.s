@@ -16,34 +16,37 @@ main:
   ldr r2, numbers_address
   ldr r1, [r2], #4
     /* r0 + 10 */
-  add r0, r0, r1
+  sub r0, r0, r1
   ldr r1, [r2], #4
     /* r0 + 9 */
-  add r0, r0, r1
+  sub r0, r0, r1
   ldr r1, [r2], #4
     /* r0 + 8 */
-  add r0, r0, r1
+  sub r0, r0, r1
   ldr r1, [r2], #4
     /* r0 + 7 */
-  add r0, r0, r1
+  sub r0, r0, r1
   ldr r1, [r2], #4
     /* r0 + 6 */
-  add r0, r0, r1
+  sub r0, r0, r1
   ldr r1, [r2], #4
     /* r0 + 5 */
-  add r0, r0, r1
+  sub r0, r0, r1
   ldr r1, [r2], #4
     /* r0 + 4 */
-  add r0, r0, r1
+  sub r0, r0, r1
   ldr r1, [r2], #4
     /* r0 + 3 */
-  add r0, r0, r1
+  sub r0, r0, r1
   ldr r1, [r2], #4
     /* r0 + 2 */
-  add r0, r0, r1
+  sub r0, r0, r1
   ldr r1, [r2], #4
     /* r0 + 1 */
-  add r0, r0, r1
+  sub r0, r0, r1
+
+    /* Clear register 0 */
+  eor r0, r0, r0
 
   bx lr
 
