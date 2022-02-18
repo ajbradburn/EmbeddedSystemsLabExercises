@@ -35,7 +35,7 @@ def main(argv):
     fstring = "{:>" + str(padding) + "}|  {}"
 
     for i, line in enumerate(lines):
-        print(fstring.format(i, line.rstrip()))
+        print(fstring.format(i+1, line.rstrip()))
 
 if __name__ == "__main__":
     main(sys.argv[1:])
