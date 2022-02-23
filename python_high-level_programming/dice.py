@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import sys
 import getopt
@@ -16,8 +16,7 @@ def calc_combinations(roll_totals, remaining_die, cumulative_rolls):
 
 
 def main(argv):
-# Initialize stats.
-# Check if configuration file exists.
+    # Check if configuration file exists.
     file_name = 'die_stats.json'
     if(exists(file_name)):
         file_handle = open(file_name, 'r')
@@ -25,6 +24,7 @@ def main(argv):
         file_handle.close()
         file_handle = open(file_name, 'w')
     else:
+    # Initialize stats.
         file_handle = open(file_name, 'w')
         stats = {
                     '1':{
@@ -38,7 +38,7 @@ def main(argv):
                     }
                 }
 
-# Look for command line input of N die.
+    # Look for command line input of N die.
     help_string = 'output_with_format.py -i <file_name>'
     try:
         opts, args = getopt.getopt(argv, "hn:")
@@ -54,7 +54,7 @@ def main(argv):
         elif opt in ("-n"):
             number_of_die = arg
 
-# If NO, ask for user input of N Die.
+    # If NO, ask for user input of N Die.
     if number_of_die == None:
         number_of_die = input("Enter the number of die you'd like to roll:")
     
@@ -102,12 +102,12 @@ def main(argv):
     for d in rolls:
         print("Die {} rolled a {}.".format(d, rolls[d]))
 
+    # Output die statistics.
     str_actual_roll_percent = int((stats[str_number_of_die][str_roll_total]['rolls'] / stats[str_number_of_die]['run_count']) * 100)
     print("Out of the {} times that this program has been run {} has been rolled {} times, a percentage of {}. A roll of {} should occur {}% of the time.".format(stats[str_number_of_die]['run_count'], str_roll_total, stats[str_number_of_die][str_roll_total]['rolls'], str_actual_roll_percent, str_roll_total, stats[str_number_of_die][str_roll_total]['percentage']))
 
-# Output die statistics.
 
-# Save config and statistics to a file.
+    # Save config and statistics to a file.
     stats_string = json.dumps(stats, indent=4)
     file_handle.truncate()
     file_handle.write(stats_string)
