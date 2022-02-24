@@ -56,7 +56,7 @@ def main(argv):
 
     # If NO, ask for user input of N Die.
     if number_of_die == None:
-        number_of_die = input("Enter the number of die you'd like to roll:")
+        number_of_die = input("Enter the number of die you'd like to roll: ")
     
     # Make sure that any input is an int.
     number_of_die = int(number_of_die)
@@ -67,8 +67,7 @@ def main(argv):
         print('You must enter a number greater than 1.')
         sys.exit(2)
 
-    # Increment our run counter.
-
+    # Initialize stats for N die if it doesn't already exist.
     if not str_number_of_die in stats:
         die_combinations = []
         calc_combinations(die_combinations, number_of_die, 0)
