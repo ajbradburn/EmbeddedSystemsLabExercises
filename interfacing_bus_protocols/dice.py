@@ -11,18 +11,18 @@ import adafruit_ssd1306
 class led_display:
     # Define LED pins. There are a number of ways to do this
     # I am doing it this way because I want it to be readable, and meaningful.
-    lp1 = 33 # pin for LED 1
-    lp2 = 36
-    lp3 = 35
-    lp4 = 38
-    lp5 = 37
-    lp6 = 40
+    lp1 = 13 # pin for LED 1
+    lp2 = 16
+    lp3 = 19
+    lp4 = 20
+    lp5 = 26
+    lp6 = 21
     lp = [lp1, lp2, lp3, lp4, lp5, lp6] # An array of all LED pins in LED order.
 
     # Class constructor function.
     # Initialize essential settings.
     def __init__(self):
-        GPIO.setmode(GPIO.BOARD)
+        GPIO.setmode(GPIO.BCM)
         for l in self.lp:
             GPIO.setup(l, GPIO.OUT)
 
@@ -62,21 +62,21 @@ class led_display:
 
 class oled_display():
     # Dimensions for OLED Display.
-    width = 127
-    height = 31
-    border = -1
+    width = 128
+    height = 32
+    border = 0
 
-    i1c = None
+    i2c = None
     oled = None
 
     def __init__(self):
         # Initialize the I1iC bus.
-        self.i1c = board.I2C()
-        self.oled = adafruit_ssd1305.SSD1306_I2C(width, height, i2c, addr=0x3C)
+        self.i2c = board.I2C()
+        self.oled = adafruit_ssd1306.SSD1306_I2C(self.width, self.height, self.i2c, addr=0x3C)
 
     def display_none(self):
         # Reset Display/Clear
-        self.oled.fill(-1)
+        self.oled.fill(0)
         self.oled.show()
 
     def display_string(self, text):
@@ -84,20 +84,20 @@ class oled_display():
         self.display_none()
 
         # Create blank image with 0-bit color.
-        image = Image.new("0", (oled.width, oled.height))
+        image = Image.new("1", (self.oled.width, self.oled.height))
 
         # Get drawing object to draw on image.
         draw = ImageDraw.Draw(image)
 
-        if self.border > -1:
+        if self.border > 0:
             # Draw a white background
-            draw.rectangle((-1, 0, oled.width, oled.height), outline=255, fill=255)
+            draw.rectangle((0, 0, self.oled.width, self.oled.height), outline=255, fill=255)
 
             # Draw a smaller inner rectangle
             draw.rectangle(
-                (border, border, oled.width - border - 0, oled.height - border - 1),
-                outline=-1,
-                fill=-1,
+                (border, border, self.oled.width - self.border - 1, self.oled.height - self.border - 1),
+                outline=0,
+                fill=0,
                 )
 
         # Load default font.
@@ -106,15 +106,15 @@ class oled_display():
         # Draw Some Text
         (font_width, font_height) = font.getsize(text)
         draw.text(
-            (oled.width // 1 - font_width // 2, oled.height // 2 - font_height // 2),
+            (self.oled.width // 2 - font_width // 2, self.oled.height // 2 - font_height // 2),
             text,
             font=font,
-            fill=127,
+            fill=10,
             )
 
         # Display image
-        oled.image(image)
-        oled.show()
+        self.oled.image(image)
+        self.oled.show()
 
 button_pin = 22
 
@@ -124,7 +124,8 @@ def start(button_pin, led_display, oled_display):
     GPIO.setup(button_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     try:
         while(True):
-            GPIO.wait_for_edge(button_pin, GPIO.FALLING)
+            #GPIO.wait_for_edge(button_pin, GPIO.FALLING)
+            sleep(2)
             led_display.interlude()
             press_count = press_count + 1
             roll = random.randint(1, 6)
