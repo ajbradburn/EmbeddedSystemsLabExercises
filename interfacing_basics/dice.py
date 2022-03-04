@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+import signal
+import sys
 import RPi.GPIO as GPIO
 from time import sleep
 import random
@@ -56,20 +58,26 @@ class led_display:
             GPIO.output(l, 0)
             sleep(0.020)
 
-button_pin = 22
-press_count = 0
+button_pin = 25
 
-def roll_dice():
+# Upon Ctrl-C, exit the application.
+def signal_handler(sig, frame):
+    GPIO.cleanup()
+    sys.exit(0)
+
+def roll_dice(channel):
     led_display.interlude()
-    press_count = press_count + 1
     roll = random.randint(1, 6)
     led_display.display(roll)
-    print("Button Pressed {} times. New roll of: {}.".format(press_count, roll))
+    print("New roll of: {}.".format(roll))
 
 # Start monitoring for, and responding to, a button press.
 def start(button_pin, led_display):
     GPIO.setup(button_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    # Monitor the button pin, and when it is pressed for 100ms, call the function roll_dice.
     GPIO.add_event_detect(button_pin, GPIO.FALLING, callback=roll_dice, bouncetime=100)
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.pause()
 
 led_display = led_display()
 start(button_pin, led_display)
