@@ -1,8 +1,9 @@
 #!/usr/bin/python3
+import signal
+import sys
 import RPi.GPIO as GPIO
 from time import sleep
 import random
-
 import board
 from PIL import Image, ImageDraw, ImageFont
 import adafruit_ssd1306
@@ -116,26 +117,27 @@ class oled_display():
         self.oled.image(image)
         self.oled.show()
 
-button_pin = 22
+button_pin = 25
+
+# Upon Ctrl-C, exit the application
+def signal_handler(sig, frame):
+    GPIO.cleanup()
+    sys.exit(0)
+
+def roll_dice(channel):
+    led_display.interlude()
+    roll = random.randint(1, 6)
+    text = "Rolled a {}.".format(roll)
+    oled_display.display_string(text)
+    led_display.display(roll)
+    print("New roll of: {}.".format(roll))
 
 # Start monitoring for, and responding to, a button press.
 def start(button_pin, led_display, oled_display):
-    press_count = 0
     GPIO.setup(button_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    try:
-        while(True):
-            #GPIO.wait_for_edge(button_pin, GPIO.FALLING)
-            sleep(2)
-            led_display.interlude()
-            press_count = press_count + 1
-            roll = random.randint(1, 6)
-            led_display.display(roll)
-            text = "Rolled a {}.".format(roll)
-            oled_display.display_string(text)
-            print("Button Pressed {} times. New roll of: {}.".format(press_count, roll))
-
-    except KeyboardInterrupt:
-        pass
+    GPIO.add_event_detect(button_pin, GPIO.FALLING, callback=roll_dice, bouncetime=100)
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.pause()
 
 led_display = led_display()
 oled_display = oled_display()

@@ -1,7 +1,7 @@
+#!/usr/bin/python3
 import board
 from PIL import Image, ImageDraw, ImageFont
 import adafruit_ssd1306
-
 import time
 import adafruit_ahtx0
 
@@ -20,10 +20,6 @@ def display_none():
     oled.show()
 
 def display_temp():
-    # Reset Display/Clear
-    oled.fill(0)
-    oled.show()
-
     # Create blank image with 1-bit color.
     image = Image.new("1", (oled.width, oled.height))
 
@@ -43,7 +39,7 @@ def display_temp():
     # Create sensor object, communicating over the board's default I2C bus
     sensor = adafruit_ahtx0.AHTx0(i2c)
 
-    text = "T:{:.1f} C|H:{:.1f}".format(sensor.temperature, sensor.relative_humidity)
+    text = " T:{:.1f}C|H:{:.1f}% ".format(sensor.temperature, sensor.relative_humidity)
 
     # Load default font.
     font = ImageFont.load_default()
@@ -63,6 +59,4 @@ def display_temp():
 
 while(True):
     display_temp()
-    time.sleep(2)
-    display_none()
     time.sleep(1)
