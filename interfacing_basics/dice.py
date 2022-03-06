@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 import signal
 import sys
 import RPi.GPIO as GPIO
@@ -27,7 +26,6 @@ class led_display:
     # Class Destructor function.
     # Do things that should be done with stopping.
     def __del__(self):
-        sleep(2)
         GPIO.cleanup()
         return
 
@@ -62,7 +60,8 @@ button_pin = 25
 
 # Upon Ctrl-C, exit the application.
 def signal_handler(sig, frame):
-    GPIO.cleanup()
+    global led_display
+    del led_display
     sys.exit(0)
 
 def roll_dice(channel):

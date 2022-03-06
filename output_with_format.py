@@ -35,6 +35,8 @@ def main(argv):
     fstring = "{:>" + str(padding) + "}|  {}"
 
     for i, line in enumerate(lines):
+        line = line.replace('<', '&lt;')
+        line = line.replace('>', '&gt;')
         print(fstring.format(i+1, line.rstrip()))
 
 if __name__ == "__main__":
