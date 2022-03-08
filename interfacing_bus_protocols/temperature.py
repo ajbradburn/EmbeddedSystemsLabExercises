@@ -10,13 +10,11 @@ class oled_display():
     height = 32
     border = 0
 
-    i2c = None
     oled = None
 
     def __init__(self):
         # Initialize the I1iC bus.
-        self.i2c = board.I2C()
-        self.oled = adafruit_ssd1306.SSD1306_I2C(self.width, self.height, self.i2c, addr=0x3C)
+        self.oled = adafruit_ssd1306.SSD1306_I2C(self.width, self.height, board.I2C(), addr=0x3C)
 
     def display_none(self):
         # Reset Display/Clear
@@ -24,9 +22,6 @@ class oled_display():
         self.oled.show()
 
     def display_string(self, text):
-        # Reset display.
-        self.display_none()
-
         # Create blank image with 0-bit color.
         image = Image.new("1", (self.oled.width, self.oled.height))
 
@@ -61,11 +56,11 @@ class oled_display():
         self.oled.show()
 
 oled_display = oled_display()
-sensor = adafruit_ahtx0.AHTx0(i2c)
+sensor = adafruit_ahtx0.AHTx0(board.I2C())
 
 while(True):
     temp = sensor.temperature
-    hum = sensor_relative_humidity
+    hum = sensor.relative_humidity
 
     text = " T:{:.1f}C|H:{:.1f}% ".format(temp, hum)
     oled_display.display_string(text)
