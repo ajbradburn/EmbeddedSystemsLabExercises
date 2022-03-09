@@ -157,9 +157,9 @@ def start_temp_timer():
 def get_weather():
     start_forecast_timer()
     global temp_timer
+    temp_timer.cancel()
     global oled_display
     global sensor
-    temp_timer.cancel()
     weather = nws_forecast()
     forecast = weather.get()
     oled_display.display_string('High: {}°F'.format(forecast['temperature']), default_font, 16)
@@ -168,7 +168,6 @@ def get_weather():
     sleep(2)
     oled_display.display_with_intro('Forecast:', forecast['detailedForecast'], default_font, 16)
     display_temp()
-    start_temp_timer()
 
 def display_temp():
     start_temp_timer()
